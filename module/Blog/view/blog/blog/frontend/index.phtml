@@ -1,0 +1,32 @@
+<div>
+
+	<h1>Front Blogs List</h1>
+
+	<div class="btn-group">
+		<a href="<?php echo $this->url('blog',['action'=>'add']) ?>" class="btn btn-primary">Add</a>
+	</div>
+
+	<br/>
+	<br/>
+	
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Title</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+		<?php foreach($blogs as $blog) : ?>
+			<tr>
+				<td><?php echo $blog->id ?></td>
+				<td><a href="<?php echo $this->url('blog',['action'=>'show','id'=>$blog->id]) ?>"><?php echo $blog->title ?></a></td>
+				<td><a href="<?php echo $this->url('blog',['action'=>'edit','id'=>$blog->id]) ?>">Edit</a></td>
+			</tr>
+		<?php endforeach; ?>	
+		</tbody>
+	</table>
+
+
+</div>

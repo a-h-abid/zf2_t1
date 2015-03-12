@@ -1,0 +1,18 @@
+{
+	"require" : {
+		"zendframework/zendframework" : "2.3.*",
+		"doctrine/doctrine-orm-module": "0.*"
+	},
+	"require-dev" : {
+		"zendframework/zend-developer-tools" : "dev-master"
+	},
+	"autoload": {
+		"psr-0": {
+			"ABD" : "",
+			"Blog" : "module/Blog/src/"
+		},
+		"files" : [
+			"ABD/Helpers/debug_helper.php"
+		]
+	}
+}
