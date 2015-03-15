@@ -6,11 +6,98 @@ use Zend\Mvc\MvcEvent;
 
 abstract class MasterController extends AbstractActionController {
 	
+	/**
+	 * Doctrine's Entity Manager
+	 *
+	 * @var Doctrine\ORM\EntityManager
+	 */
 	protected $entityManager;
 
+	/**
+	 * Layer Name
+	 *
+	 * @var string
+	 */
 	protected $layerName;
 
+	/**
+	 * Request names stored in array
+	 *
+	 * @var array
+	 */
     protected $requestNames;
+
+    /**
+     * onDispatch description
+     *
+     * @param  MvcEvent $e
+     * @return void
+     */
+    public function onDispatch(MvcEvent $e)
+    {
+        $this->setRequestNames($e);
+
+        return parent::onDispatch($e);
+    }
+
+    /**
+     * Get the Requested Entity
+     *
+     * @param  string $entity
+     * @return Entity
+     */
+    protected function entity($entity)
+    {
+        return $this->getEntityManager()->getRepository($entity);
+    }
+
+    /**
+     * Get Doctrine Entity Manager
+     *
+     * @return Doctrine\ORM\EntityManager
+     */
+    protected function getEntityManager()
+    {
+        if (null === $this->entityManager)
+        {
+            $this->entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        }
+
+        return $this->entityManager;
+    }
+
+    /**
+     * Set Page Status to Not Found
+     *
+     * @return void
+     */
+    protected function pageNotFound()
+    {
+        $this->getResponse()->setStatusCode(404);
+        return;
+    }
+
+    /**
+     * Render view file, dependent on view layer
+     *
+     * @param  array $variables
+     * @param  array $options
+     * @return ViewModel
+     */
+    protected function render($variables = null, $options = null)
+    {
+    	$viewPath = strtolower(
+    		$this->requestNames['module'].'/'.
+    		$this->requestNames['layer'].'/'.
+    		$this->requestNames['controller'].'/'.
+    		$this->requestNames['action']
+    	);
+
+    	$viewModel = new ViewModel($variables, $options);
+    	$viewModel->setTemplate($viewPath);
+
+    	return $viewModel;
+    }
 
     /**
      * Set Request Names of Module, Controllers etc.
@@ -21,6 +108,10 @@ abstract class MasterController extends AbstractActionController {
     {
         if ($this->requestNames) {
             return;
+        }
+
+        if ($this->layerName == null) {
+        	die('Please set the $layerName on "'. get_class($this).'".');
         }
 
         $sm = $e->getApplication()->getServiceManager();
@@ -50,80 +141,6 @@ abstract class MasterController extends AbstractActionController {
         $e->getViewModel()->setVariables([
             'requestNames' => $this->requestNames,
         ]);
-    }
-
-    /**
-     * onDispatch description
-     *
-     * @param  MvcEvent $e
-     * @return void
-     */
-    public function onDispatch(MvcEvent $e)
-    {
-        $this->setRequestNames($e);
-
-        return parent::onDispatch($e);
-    }
-
-    /**
-     * Get Doctrine Entity Manager
-     *
-     * @return Doctrine\ORM\EntityManager
-     */
-    protected function getEntityManager()
-    {
-        if (null === $this->entityManager)
-        {
-            $this->entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        }
-
-        return $this->entityManager;
-    }
-
-    
-    /**
-     * Set Page Status to Not Found
-     *
-     * @return void
-     */
-    protected function pageNotFound()
-    {
-        $this->getResponse()->setStatusCode(404);
-        return;
-    }
-    
-
-    /**
-     * Get the Requested Entity
-     *
-     * @param  string $entity
-     * @return Entity
-     */
-    protected function entity($entity)
-    {
-        return $this->getEntityManager()->getRepository($entity);
-    }
-
-    /**
-     * Render view file, dependent on view layer
-     *
-     * @param  array $variables
-     * @param  array $options
-     * @return ViewModel
-     */
-    protected function render($variables = null, $options = null)
-    {
-    	$viewPath = strtolower(
-    		$this->requestNames['module'].'/'.
-    		$this->requestNames['layer'].'/'.
-    		$this->requestNames['controller'].'/'.
-    		$this->requestNames['action']
-    	);
-
-    	$viewModel = new ViewModel($variables, $options);
-    	$viewModel->setTemplate($viewPath);
-
-    	return $viewModel;
     }
 
 }
