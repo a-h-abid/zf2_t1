@@ -8,6 +8,8 @@ abstract class MasterController extends AbstractActionController {
 	
 	protected $entityManager;
 
+	protected $layerName;
+
     protected $requestNames;
 
     /**
@@ -17,7 +19,6 @@ abstract class MasterController extends AbstractActionController {
      */
     protected function setRequestNames(MvcEvent $e)
     {
-        // If values already set, no need to execute
         if ($this->requestNames) {
             return;
         }
@@ -30,16 +31,19 @@ abstract class MasterController extends AbstractActionController {
 
         $params = $matchedRoute->getParams();
 
-        $controller = $params['controller'];
+        $full_controller = $params['controller'];
         $action = $params['action'];
 
-        $module_array = explode('\\', $controller);
-        $module = array_pop($module_array);
+        $module_array = explode('\\', $full_controller);
+        $module = $module_array[0];
+        $layer = $this->layerName;
 
         $route = $matchedRoute->getMatchedRouteName();
 
         $this->requestNames['module'] = $module;
-        $this->requestNames['controller'] = $controller;
+        $this->requestNames['full_controller'] = $full_controller;
+        $this->requestNames['layer'] = $layer;
+        $this->requestNames['controller'] = $module_array[3];
         $this->requestNames['action'] = $action;
         $this->requestNames['route'] = $route;
 
@@ -98,6 +102,28 @@ abstract class MasterController extends AbstractActionController {
     protected function entity($entity)
     {
         return $this->getEntityManager()->getRepository($entity);
+    }
+
+    /**
+     * Render view file, dependent on view layer
+     *
+     * @param  array $variables
+     * @param  array $options
+     * @return ViewModel
+     */
+    protected function render($variables = null, $options = null)
+    {
+    	$viewPath = strtolower(
+    		$this->requestNames['module'].'/'.
+    		$this->requestNames['layer'].'/'.
+    		$this->requestNames['controller'].'/'.
+    		$this->requestNames['action']
+    	);
+
+    	$viewModel = new ViewModel($variables, $options);
+    	$viewModel->setTemplate($viewPath);
+
+    	return $viewModel;
     }
 
 }

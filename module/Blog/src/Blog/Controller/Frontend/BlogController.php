@@ -1,9 +1,8 @@
 <?php namespace Blog\Controller\Frontend;
 
-use ABD\BaseControllers\BackendController;
-use Zend\View\Model\ViewModel;
+use ABD\BaseControllers\FrontendController;
 
-class BlogController extends BackendController {
+class BlogController extends FrontendController {
 
     /**
      * List Items
@@ -12,7 +11,7 @@ class BlogController extends BackendController {
      */
 	public function indexAction()
 	{
-        return new ViewModel([
+        return $this->render([
             'blogs' => $this->entity('Blog\Entity\Blog')->findAll(),
         ]);
 	}
@@ -35,7 +34,7 @@ class BlogController extends BackendController {
             return $this->pageNotFound();
         }
 
-        return new ViewModel([
+        return $this->render([
             'blog' => $blog,
         ]);
     }
@@ -48,7 +47,7 @@ class BlogController extends BackendController {
      */
     public function addAction()
     {
-        return new ViewModel();
+        return $this->render();
     }
 
 
@@ -70,7 +69,7 @@ class BlogController extends BackendController {
      */
     public function editAction()
     {
-        return new ViewModel();
+        return $this->render();
     }
 
 

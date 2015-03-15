@@ -3,7 +3,6 @@
 return [
     'controllers' => [
         'invokables' => [
-            // 'Blog\Controller\Blog' => 'Blog\Controller\BlogController',
             'Blog\Controller\Frontend\Blog' => 'Blog\Controller\Frontend\BlogController',
             'Blog\Controller\Backend\Blog' => 'Blog\Controller\Backend\BlogController',
         ],
@@ -16,13 +15,11 @@ return [
                 'options' => [
                     'route'    => '/blog/blog[/:action][/:id]',
                     'constraints' => [
-                        // 'controller' => 'Blog\Controller\Blog',
                         'controller' => 'Blog\Controller\Frontend\Blog',
                         'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id'         => '[0-9]+',
                     ],
                     'defaults' => [
-                        // 'controller' => 'Blog\Controller\Blog',
                         'controller' => 'Blog\Controller\Frontend\Blog',
                         'action'     => 'index',
                     ],
