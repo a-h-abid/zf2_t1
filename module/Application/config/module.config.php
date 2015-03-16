@@ -15,7 +15,7 @@ return [
                 'options' => [
                     'route'    => '/',
                     'defaults' => [
-                        'controller' => 'Application\Controller\Index',
+                        'controller' => 'Application\Controller\Frontend\Index',
                         'action'     => 'index',
                     ],
                 ],
@@ -29,7 +29,7 @@ return [
                 'options' => [
                     'route'    => '/application',
                     'defaults' => [
-                        '__NAMESPACE__' => 'Application\Controller',
+                        '__NAMESPACE__' => 'Application\Controller\Frontend',
                         'controller'    => 'Index',
                         'action'        => 'index',
                     ],
@@ -73,7 +73,7 @@ return [
     ],
     'controllers' => [
         'invokables' => [
-            'Application\Controller\Index' => 'Application\Controller\IndexController'
+            'Application\Controller\Frontend\Index' => 'Application\Controller\Frontend\IndexController'
         ],
     ],
     'view_manager' => [
