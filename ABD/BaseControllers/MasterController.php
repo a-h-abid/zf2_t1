@@ -94,7 +94,10 @@ abstract class MasterController extends AbstractActionController {
     	);
 
     	$viewModel = new ViewModel($variables, $options);
-    	$viewModel->setTemplate($viewPath);
+    	$viewModel->setTemplate($viewPath)
+                    ->setVariables([
+                        'requestNames' => $this->requestNames,
+                    ]);
 
     	return $viewModel;
     }
@@ -123,24 +126,14 @@ abstract class MasterController extends AbstractActionController {
         $params = $matchedRoute->getParams();
 
         $full_controller = $params['controller'];
-        $action = $params['action'];
-
         $module_array = explode('\\', $full_controller);
-        $module = $module_array[0];
-        $layer = $this->layerName;
 
-        $route = $matchedRoute->getMatchedRouteName();
-
-        $this->requestNames['module'] = $module;
+        $this->requestNames['module'] = $module_array[0];
         $this->requestNames['full_controller'] = $full_controller;
-        $this->requestNames['layer'] = $layer;
+        $this->requestNames['layer'] = $this->layerName;
         $this->requestNames['controller'] = $module_array[3];
-        $this->requestNames['action'] = $action;
-        $this->requestNames['route'] = $route;
-
-        $e->getViewModel()->setVariables([
-            'requestNames' => $this->requestNames,
-        ]);
+        $this->requestNames['action'] = $params['action'];
+        $this->requestNames['route'] = $matchedRoute->getMatchedRouteName();
     }
 
 }
