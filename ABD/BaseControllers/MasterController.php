@@ -14,18 +14,25 @@ abstract class MasterController extends AbstractActionController {
 	protected $entityManager;
 
 	/**
-	 * Layer Name
-	 *
-	 * @var string
-	 */
-	protected $layerName;
-
-	/**
 	 * Request names stored in array
 	 *
 	 * @var array
 	 */
     protected $requestNames;
+
+    /**
+     * Get the Layer Name
+     *
+     * @return string
+     */
+    abstract protected function getLayerName();
+
+    /**
+     * Get the Layer's Layout
+     *
+     * @return string
+     */
+    abstract protected function getLayerLayout();
 
     /**
      * onDispatch description
@@ -99,6 +106,9 @@ abstract class MasterController extends AbstractActionController {
                         'requestNames' => $this->requestNames,
                     ]);
 
+        // Set the layout file to use
+        $this->layout($this->getLayerLayout());
+
     	return $viewModel;
     }
 
@@ -113,10 +123,6 @@ abstract class MasterController extends AbstractActionController {
             return;
         }
 
-        if ($this->layerName == null) {
-        	die('Please set the $layerName on "'. get_class($this).'".');
-        }
-
         $sm = $e->getApplication()->getServiceManager();
 
         $router = $sm->get('router');
@@ -128,10 +134,10 @@ abstract class MasterController extends AbstractActionController {
         $full_controller = $params['controller'];
         $module_array = explode('\\', $full_controller);
 
-        $this->requestNames['module'] = $module_array[0];
+        $this->requestNames['module'] = array_shift($module_array);
         $this->requestNames['full_controller'] = $full_controller;
-        $this->requestNames['layer'] = $this->layerName;
-        $this->requestNames['controller'] = $module_array[3];
+        $this->requestNames['layer'] = $this->getLayerName();
+        $this->requestNames['controller'] = array_pop($module_array);
         $this->requestNames['action'] = $params['action'];
         $this->requestNames['route'] = $matchedRoute->getMatchedRouteName();
     }

@@ -1,13 +1,7 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
 
 return [
+    
     'router' => [
         'routes' => [
             'home' => [
@@ -52,6 +46,7 @@ return [
             ],
         ],
     ],
+    
     'service_manager' => [
         'abstract_factories' => [
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
@@ -61,6 +56,7 @@ return [
             'translator' => 'MvcTranslator',
         ],
     ],
+    
     'translator' => [
         'locale' => 'en_US',
         'translation_file_patterns' => [
@@ -71,11 +67,13 @@ return [
             ],
         ],
     ],
+    
     'controllers' => [
         'invokables' => [
             'Application\Controller\Frontend\Index' => 'Application\Controller\Frontend\IndexController'
         ],
     ],
+    
     'view_manager' => [
         'display_not_found_reason' => true,
         'display_exceptions'       => true,
@@ -92,6 +90,7 @@ return [
             __DIR__ . '/../view',
         ],
     ],
+    
     // Placeholder for console routes
     'console' => [
         'router' => [
