@@ -10,10 +10,29 @@ return [
 
     'router' => [
         'routes' => [
+        	'administrator' => [
+        		'child_routes' => [
+        			'blog' => [
+        				'type'		=> 'segment',
+        				'options'	=> [
+        					'route'    => '/blog[/:action][/:id]',
+		                    'constraints' => [
+		                        'controller' => 'Blog\Controller\Backend\Blog',
+		                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+		                        'id'         => '[0-9]+',
+		                    ],
+		                    'defaults' => [
+		                        'controller' => 'Blog\Controller\Backend\Blog',
+		                        'action'     => 'index',
+		                    ],
+        				],
+        			],
+        		],
+        	],
             'blog' => [
                 'type'    => 'segment',
                 'options' => [
-                    'route'    => '/blog/blog[/:action][/:id]',
+                    'route'    => '/blog[/:action][/:id]',
                     'constraints' => [
                         'controller' => 'Blog\Controller\Frontend\Blog',
                         'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
