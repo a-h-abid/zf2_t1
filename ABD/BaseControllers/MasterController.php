@@ -127,6 +127,22 @@ abstract class MasterController extends AbstractActionController {
     }
 
     /**
+     * Respond with JSON
+     *
+     * @param  array  $json
+     * @return string
+     */
+    protected function respondJson(array $json)
+    {
+        $response = $this->getResponse();
+        
+        $response->getHeaders()->addHeaderLine( 'Content-Type', 'application/json' );
+        $response->setContent(json_encode($json));
+        
+        return $response;
+    }
+
+    /**
      * Set Request Names of Module, Controllers etc.
      *
      * @param MvcEvent $e
