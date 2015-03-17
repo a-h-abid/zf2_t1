@@ -9,6 +9,8 @@
 	"autoload": {
 		"psr-0": {
 			"ABD" : "",
+			"Administrator" : "module/Administrator/src/",
+			"Application" : "module/Application/src/",
 			"Blog" : "module/Blog/src/"
 		},
 		"files" : [
