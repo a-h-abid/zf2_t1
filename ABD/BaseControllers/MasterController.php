@@ -11,14 +11,14 @@ abstract class MasterController extends AbstractActionController {
 	 *
 	 * @var Doctrine\ORM\EntityManager
 	 */
-	protected $entityManager;
+	private $entityManager;
 
 	/**
 	 * Request names stored in array
 	 *
 	 * @var array
 	 */
-    protected $requestNames;
+    private $requestNames;
 
     /**
      * Get the Layer Name
@@ -74,6 +74,20 @@ abstract class MasterController extends AbstractActionController {
     }
 
     /**
+     * Get the Request Names
+     *
+     * @return array
+     */
+    protected function getRequestNames()
+    {
+    	if (!$this->requestNames) {
+    		$this->setRequestNames();
+    	}
+
+    	return $this->requestNames;
+    }
+
+    /**
      * Set Page Status to Not Found
      *
      * @return void
@@ -117,9 +131,9 @@ abstract class MasterController extends AbstractActionController {
      *
      * @param MvcEvent $e
      */
-    protected function setRequestNames(MvcEvent $e)
+    private function setRequestNames(MvcEvent $e)
     {
-        if ($this->requestNames) {
+        if (is_array($this->requestNames)) {
             return;
         }
 
