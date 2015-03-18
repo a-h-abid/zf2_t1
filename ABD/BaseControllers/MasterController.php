@@ -44,18 +44,9 @@ abstract class MasterController extends AbstractActionController {
     {
         $this->setRequestNames($e);
 
-        return parent::onDispatch($e);
-    }
+        $this->setLayerLayout();
 
-    /**
-     * Get the Requested Entity
-     *
-     * @param  string $entity
-     * @return Entity
-     */
-    protected function entity($entity)
-    {
-        return $this->getEntityManager()->getRepository($entity);
+        return parent::onDispatch($e);
     }
 
     /**
@@ -74,6 +65,17 @@ abstract class MasterController extends AbstractActionController {
     }
 
     /**
+     * Get Entity Repository
+     *
+     * @param  string $entity
+     * @return Entity
+     */
+    protected function getRepository($entity)
+    {
+        return $this->getEntityManager()->getRepository($entity);
+    }
+
+    /**
      * Get the Request Names
      *
      * @return array
@@ -85,6 +87,25 @@ abstract class MasterController extends AbstractActionController {
     	}
 
     	return $this->requestNames;
+    }
+
+    /**
+     * Get the view file path of the current request
+     *
+     * @return string
+     */
+    private function getViewTemplatePath()
+    {
+    	if (!$this->requestNames) {
+    		$this->setRequestNames();
+    	}
+    	
+    	return strtolower(
+    		$this->requestNames['module'].'/'.
+    		$this->requestNames['layer'].'/'.
+    		$this->requestNames['controller'].'/'.
+    		$this->requestNames['action']
+    	);	
     }
 
     /**
@@ -107,21 +128,11 @@ abstract class MasterController extends AbstractActionController {
      */
     protected function render($variables = null, $options = null)
     {
-    	$viewPath = strtolower(
-    		$this->requestNames['module'].'/'.
-    		$this->requestNames['layer'].'/'.
-    		$this->requestNames['controller'].'/'.
-    		$this->requestNames['action']
-    	);
-
     	$viewModel = new ViewModel($variables, $options);
-    	$viewModel->setTemplate($viewPath)
+    	$viewModel->setTemplate($this->getViewTemplatePath())
                     ->setVariables([
                         'requestNames' => $this->requestNames,
                     ]);
-
-        // Set the layout file to use
-        $this->layout($this->getLayerLayout());
 
     	return $viewModel;
     }
@@ -143,6 +154,16 @@ abstract class MasterController extends AbstractActionController {
     }
 
     /**
+     * Set Layer Layout for current request
+     *
+     * @return  void
+     */
+    private function setLayerLayout()
+    {
+    	$this->layout($this->getLayerLayout());
+    }
+
+    /**
      * Set Request Names of Module, Controllers etc.
      *
      * @param MvcEvent $e
@@ -153,23 +174,23 @@ abstract class MasterController extends AbstractActionController {
             return;
         }
 
+        // Get Route and Params
         $sm = $e->getApplication()->getServiceManager();
-
         $router = $sm->get('router');
         $request = $sm->get('request');
-        $matchedRoute = $router->match($request);
-
+        $route = $router->match($request)->getMatchedRouteName();
         $params = $matchedRoute->getParams();
 
-        $full_controller = $params['controller'];
-        $module_array = explode('\\', $full_controller);
+        // Split full controller path
+        $module_array = explode('\\', $params['controller']);
 
+        // Set to requestNames
         $this->requestNames['module'] = array_shift($module_array);
-        $this->requestNames['full_controller'] = $full_controller;
+        $this->requestNames['full_controller'] = $params['controller'];
         $this->requestNames['layer'] = $this->getLayerName();
         $this->requestNames['controller'] = array_pop($module_array);
         $this->requestNames['action'] = $params['action'];
-        $this->requestNames['route'] = $matchedRoute->getMatchedRouteName();
+        $this->requestNames['route'] = $route;
     }
 
 }

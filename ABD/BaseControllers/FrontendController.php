@@ -5,13 +5,27 @@ use Zend\View\Model\ViewModel;
 abstract class FrontendController extends MasterController {
 	
 	/**
+	 * Layer Name
+	 *
+	 * @var string
+	 */
+	private $layerName = 'Frontend';
+
+	/**
+	 * Layer Layout
+	 *
+	 * @var string
+	 */
+	private $layerLayout = 'layout/layout';
+
+	/**
 	 * Get layer name
 	 *
 	 * @return string
 	 */
 	final protected function getLayerName()
 	{
-		return "Frontend";
+		return $this->layerName;
 	}
 	
 	/**
@@ -21,7 +35,7 @@ abstract class FrontendController extends MasterController {
 	 */
 	final protected function getLayerLayout()
 	{
-		return "layout/layout";
+		return $this->layerLayout;
 	}
 	
 }

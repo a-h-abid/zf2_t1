@@ -12,7 +12,7 @@ class BlogController extends BackendController {
 	public function indexAction()
 	{
         return $this->render([
-            'blogs' => $this->entity('Blog\Entity\Blog')->findAll(),
+            'blogs' => $this->getRepository('Blog\Entity\Blog')->findAll(),
         ]);
 	}
 
@@ -26,7 +26,7 @@ class BlogController extends BackendController {
     {
         $id = (int) $this->params()->fromRoute('id', 0);
 
-        $blog = $this->entity('Blog\Entity\Blog')->find($id);
+        $blog = $this->getRepository('Blog\Entity\Blog')->find($id);
 
         if ($blog == null)
         {
