@@ -55,6 +55,7 @@ return [
         ],
         'template_path_stack' => [
             'administrator' => __DIR__ . '/../view',
+            'admin-base-views' => 'ABD/BaseViews',
         ],
     ],
 

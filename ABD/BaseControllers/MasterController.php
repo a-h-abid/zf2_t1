@@ -21,6 +21,14 @@ abstract class MasterController extends AbstractActionController {
     private $requestNames;
 
     /**
+     * Use the normal path to view template,
+     * That is module/layer/controller/action.phtml
+     *
+     * @var boolean
+     */
+    protected $useRegularViewTemplate = true;
+
+    /**
      * Get the Layer Name
      *
      * @return string
@@ -90,11 +98,11 @@ abstract class MasterController extends AbstractActionController {
     }
 
     /**
-     * Get the view file path of the current request
+     * Get the normal view file path of the current request
      *
      * @return string
      */
-    private function getViewTemplatePath()
+    private function getRegularViewTemplatePath()
     {
     	if (!$this->requestNames) {
     		$this->setRequestNames();
@@ -129,7 +137,14 @@ abstract class MasterController extends AbstractActionController {
     protected function render($variables = null, $options = null)
     {
     	$viewModel = new ViewModel($variables, $options);
-    	$viewModel->setTemplate($this->getViewTemplatePath())
+
+    	$templatePath = $this->getRegularViewTemplatePath();
+    	if (isset($options['template']) && $this->useRegularViewTemplate == false)
+    	{
+    		$templatePath = $options['template'];
+    	}
+
+    	$viewModel->setTemplate($templatePath)
                     ->setVariables([
                         'requestNames' => $this->requestNames,
                     ]);
