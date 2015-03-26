@@ -106,7 +106,22 @@ class BlogController extends BackendController {
      */
     public function deleteAction()
     {
-        return $this->redirect()->toRoute('blog');
+        $request = $this->getRequest();
+        if ($request->isPost())
+        {
+        	$id = (int) $this->params()->fromRoute('id', 0); 
+ 
+            $id = (int) $request->getPost('id');
+            $blog = $this->getEntityManager()->find('Blog\Entity\Blog', $id);
+            if ($blog)
+            {
+                $this->getEntityManager()->remove($blog);
+                $this->getEntityManager()->flush();
+            }
+ 
+            // Redirect to list of albums
+            return $this->redirect()->toRoute('administrator/blog');
+        }
     }
 
 }
