@@ -25,8 +25,7 @@ function makeElementAttributes($attributes, $addToAttrib = [])
 	return implode(' ', $attributesArray);
 }
 
-$title = ucfirst($formMode).' blog';
-$this->headTitle($title);
+$this->headTitle($pageTitle);
 
 $bootstrapGridWidth = 12;
 $deviceMode = 'sm';
@@ -38,12 +37,11 @@ $labelOffsetClass = 'col-'.$deviceMode.'-offset-'.$labelClassWidth;
 $elementClass = 'col-'.$deviceMode.'-'.$elementClassWidth;
 
 ?>
-<a href="<?php echo $this->url('administrator/blog') ?>" class="btn btn-default">Back</a>
-<h1><?php echo $this->escapeHtml($title); ?></h1>
+<a href="<?php echo $backLinkUrl ?>" class="btn btn-default">Back</a>
+<h1><?php echo $this->escapeHtml($pageTitle); ?></h1>
 
 <?php
-$form->setAttribute('action', $this->url('administrator/blog', array('action' => 'form', 'id' => $this->id)))
-	->setAttribute('class','form-horizontal');
+$form->setAttribute('action', $formUrl)->setAttribute('class','form-horizontal');
 $form->prepare();
 
 echo $this->form()->openTag($form);
@@ -64,7 +62,6 @@ foreach ($form->getElements() as $element)
 		}
 		else
 		{
-
 			echo '<label class="'.$labelClass.'">';
 			echo $element->getLabel();
 			echo '</label>';

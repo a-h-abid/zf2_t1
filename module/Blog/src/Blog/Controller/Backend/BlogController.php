@@ -6,6 +6,35 @@ use Blog\Form\BlogForm;
 
 class BlogController extends BackendController {
 
+	/**
+	 * Set the Route Name used by this controller
+	 *
+	 * @var string
+	 */
+	private $routeName = 'administrator/blog';
+
+	/**
+	 * Name this Controller to show in title
+	 *
+	 * @var string
+	 */
+	private $controllerTitle = 'Blog';
+
+	/**
+	 * Main Entity for this controller
+	 *
+	 * @var string
+	 */
+	private $mainEntity = 'Blog\Entity\Blog';
+
+	/**
+	 * Main Form for this controller
+	 *
+	 * @var string
+	 */
+	private $mainForm = 'Blog\Form\BlogForm';
+
+
     /**
      * List Items
      *
@@ -14,7 +43,12 @@ class BlogController extends BackendController {
 	public function indexAction()
 	{
         return $this->render([
-            'blogs' => $this->getRepository('Blog\Entity\Blog')->findAll(),
+            'list' => $this->getRepository($this->mainEntity)->findAll(),
+            'tableColumns' => ['id','title'],
+            'pageTitle' => 'Blogs List',
+            'routeName' => $this->routeName,
+            'formLink' => $this->url()->fromRoute($this->routeName,['action' => 'form']),
+            'deleteLink' => $this->url()->fromRoute($this->routeName,['action' => 'delete']),
         ]);
 	}
 
@@ -28,7 +62,7 @@ class BlogController extends BackendController {
     {
         $id = (int) $this->params()->fromRoute('id', 0);
 
-        $blog = $this->getRepository('Blog\Entity\Blog')->find($id);
+        $blog = $this->getRepository($this->mainEntity)->find($id);
 
         if ($blog == null)
         {
@@ -49,51 +83,56 @@ class BlogController extends BackendController {
     public function formAction()
     {
         $id = $this->params()->fromRoute('id');
-	    $form  = new BlogForm();
+	    $form  = new $this->mainForm();
 	    $formMode = 'add';
 
 	    // Check for if Add or Edit Form Mode
         if ($id !== NULL)
         {
-        	$blog = $this->getEntityManager()->find('Blog\Entity\Blog', $id);
-	        if (!$blog)
+        	$item = $this->getEntityManager()->find($this->mainEntity, $id);
+	        if (!$item)
 	        {
-	            return $this->redirect()->toRoute('administrator/blog');
+	            return $this->redirect()->toRoute($this->routeName);
 	        }
 
-        	$form->bind($blog);
+        	$form->bind($item);
         	$formMode = 'edit';
         }
         else
         {
-        	$blog = new Blog();	
+        	$item = new $this->mainEntity();	
         }
 
         // On Post Submit
         $request = $this->getRequest();
         if ($request->isPost())
         {
-            $form->setInputFilter($blog->getInputFilter());
+            $form->setInputFilter($item->getInputFilter());
             $form->setData($request->getPost());
             if ($form->isValid())
             {
                 if ($formMode == 'add')
                 {
-                	$blog->exchangeArray($form->getData());
-	            	$this->getEntityManager()->persist($blog);
+                	$item->exchangeArray($form->getData());
+	            	$this->getEntityManager()->persist($item);
                 }
 
                 $this->getEntityManager()->flush();
 
                 // Redirect to list
-                return $this->redirect()->toRoute('administrator/blog');
+                return $this->redirect()->toRoute($this->routeName);
             }
         }
+        
+        //dd($this->url($this->routeName,['action' => 'form','id' => $id]));
 
         return $this->render([
             'id' => $id,
+            'backLinkUrl' => $this->url()->fromRoute($this->routeName),
             'form' => $form,
             'formMode' => $formMode,
+            'formUrl' => $this->url()->fromRoute($this->routeName,['action' => 'form','id' => $id]),
+            'pageTitle' => ucfirst($formMode).' '.$this->controllerTitle,
         ]);
 
     }
@@ -112,7 +151,7 @@ class BlogController extends BackendController {
         	$id = (int) $this->params()->fromRoute('id', 0); 
  
             $id = (int) $request->getPost('id');
-            $blog = $this->getEntityManager()->find('Blog\Entity\Blog', $id);
+            $blog = $this->getEntityManager()->find($this->mainEntity, $id);
             if ($blog)
             {
                 $this->getEntityManager()->remove($blog);
@@ -120,7 +159,7 @@ class BlogController extends BackendController {
             }
  
             // Redirect to list of albums
-            return $this->redirect()->toRoute('administrator/blog');
+            return $this->redirect()->toRoute($this->routeName);
         }
     }
 
