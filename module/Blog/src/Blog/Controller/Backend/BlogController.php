@@ -124,8 +124,6 @@ class BlogController extends BackendController {
             }
         }
         
-        //dd($this->url($this->routeName,['action' => 'form','id' => $id]));
-
         return $this->render([
             'id' => $id,
             'backLinkUrl' => $this->url()->fromRoute($this->routeName),
@@ -151,14 +149,13 @@ class BlogController extends BackendController {
         	$id = (int) $this->params()->fromRoute('id', 0); 
  
             $id = (int) $request->getPost('id');
-            $blog = $this->getEntityManager()->find($this->mainEntity, $id);
-            if ($blog)
+            $item = $this->getEntityManager()->find($this->mainEntity, $id);
+            if ($item)
             {
-                $this->getEntityManager()->remove($blog);
+                $this->getEntityManager()->remove($item);
                 $this->getEntityManager()->flush();
             }
  
-            // Redirect to list of albums
             return $this->redirect()->toRoute($this->routeName);
         }
     }
