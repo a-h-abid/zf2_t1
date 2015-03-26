@@ -1,15 +1,85 @@
 <?php
 
+function makeElementAttributes($attributes, $addToAttrib = [])
+{
+	$attributesArray = [];
+	
+	if (count($addToAttrib) > 0)
+	{
+		foreach ($addToAttrib as $addAttribKey => $addAttribValue)
+		{
+			if (!isset($attributes[$addAttribKey]))
+			{
+				$attributes[$addAttribKey] = '';	
+			}
+
+			$attributes[$addAttribKey] = trim($attributes[$addAttribKey].' '. $addAttribValue);
+		}
+	}
+	
+	foreach ($attributes as $attribKey => $attribValue)
+	{
+		$attributesArray[] = $attribKey.'="'.$attribValue.'"';
+	}
+
+	return implode(' ', $attributesArray);
+}
+
 $title = ucfirst($formMode).' blog';
 $this->headTitle($title);
+
+$bootstrapGridWidth = 12;
+$deviceMode = 'sm';
+$labelClassWidth = 3;
+$elementClassWidth = $bootstrapGridWidth - $labelClassWidth;
+
+$labelClass = 'control-label col-'.$deviceMode.'-'.$labelClassWidth;
+$labelOffsetClass = 'col-'.$deviceMode.'-offset-'.$labelClassWidth;
+$elementClass = 'col-'.$deviceMode.'-'.$elementClassWidth;
+
 ?>
 <a href="<?php echo $this->url('administrator/blog') ?>" class="btn btn-default">Back</a>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 
 <?php
-$form->setAttribute('action', $this->url('administrator/blog', array('action' => 'form', 'id' => $this->id)));
+$form->setAttribute('action', $this->url('administrator/blog', array('action' => 'form', 'id' => $this->id)))
+	->setAttribute('class','form-horizontal');
 $form->prepare();
 
 echo $this->form()->openTag($form);
-echo $this->formCollection($form);
+foreach ($form->getElements() as $element)
+{
+	if ($element->getAttribute('type') == 'hidden')
+	{
+		echo '<input '.makeElementAttributes($element->getAttributes()).' value="'.$element->getValue().'" />';
+	}
+	else
+	{
+		echo '<div class="form-group">';
+		if ($element->getAttribute('type') == 'submit')
+		{
+			echo '<div class="'.$labelOffsetClass.' '.$elementClass.'">';
+			echo '<input '.makeElementAttributes($element->getAttributes(),['class' => 'btn btn-primary']).' value="'.$element->getValue().'" />';
+			echo '</div>';
+		}
+		else
+		{
+
+			echo '<label class="'.$labelClass.'">';
+			echo $element->getLabel();
+			echo '</label>';
+
+			echo '<div class="'.$elementClass.'">';
+			switch ($element->getAttribute('type'))
+			{
+				default:
+					echo '<input '.makeElementAttributes($element->getAttributes(),['class' => 'form-control']).' value="'.$element->getValue().'" />';
+					break;
+			}
+			echo '</div>';
+		}
+		echo '</div>';
+	}
+}
+
 echo $this->form()->closeTag();
