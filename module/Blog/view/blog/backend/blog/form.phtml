@@ -1,0 +1,15 @@
+<?php
+
+$title = ucfirst($formMode).' blog';
+$this->headTitle($title);
+?>
+<a href="<?php echo $this->url('administrator/blog') ?>" class="btn btn-default">Back</a>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<?php
+$form->setAttribute('action', $this->url('administrator/blog', array('action' => 'form', 'id' => $this->id)));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+echo $this->formCollection($form);
+echo $this->form()->closeTag();

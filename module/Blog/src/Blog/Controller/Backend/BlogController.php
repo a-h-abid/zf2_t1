@@ -1,13 +1,15 @@
 <?php namespace Blog\Controller\Backend;
 
 use ABD\BaseControllers\BackendController;
+use Blog\Entity\Blog;
+use Blog\Form\BlogForm;
 
 class BlogController extends BackendController {
 
     /**
      * List Items
      *
-     * @return ViewModel
+     * @return Zend\View\Model\ViewModel
      */
 	public function indexAction()
 	{
@@ -39,48 +41,61 @@ class BlogController extends BackendController {
         ]);
     }
 
-
     /**
-     * Create Item Form Page
+     * Form Page
      *
-     * @return ViewModel
+     * @return Zend\View\Model\ViewModel
      */
-    public function addAction()
+    public function formAction()
     {
-        return $this->render();
-    }
+        $id = $this->params()->fromRoute('id');
+	    $form  = new BlogForm();
+	    $formMode = 'add';
 
+	    // Check for if Add or Edit Form Mode
+        if ($id !== NULL)
+        {
+        	$blog = $this->getEntityManager()->find('Blog\Entity\Blog', $id);
+	        if (!$blog)
+	        {
+	            return $this->redirect()->toRoute('administrator/blog');
+	        }
 
-    /**
-     * Add Posted Item
-     *
-     * @return Redirect
-     */
-    public function storeAction()
-    {
-        return $this->redirect()->toRoute('blog');
-    }
+        	$form->bind($blog);
+        	$formMode = 'edit';
+        }
+        else
+        {
+        	$blog = new Blog();	
+        }
 
+        // On Post Submit
+        $request = $this->getRequest();
+        if ($request->isPost())
+        {
+            $form->setInputFilter($blog->getInputFilter());
+            $form->setData($request->getPost());
+            if ($form->isValid())
+            {
+                if ($formMode == 'add')
+                {
+                	$blog->exchangeArray($form->getData());
+	            	$this->getEntityManager()->persist($blog);
+                }
 
-    /**
-     * Edit Item Form Page
-     *
-     * @return ViewModel
-     */
-    public function editAction()
-    {
-        return $this->render();
-    }
+                $this->getEntityManager()->flush();
 
+                // Redirect to list
+                return $this->redirect()->toRoute('administrator/blog');
+            }
+        }
 
-    /**
-     * Update Posted Item
-     *
-     * @return Redirect
-     */
-    public function updateAction()
-    {
-        return $this->redirect()->toRoute('blog');
+        return $this->render([
+            'id' => $id,
+            'form' => $form,
+            'formMode' => $formMode,
+        ]);
+
     }
 
 

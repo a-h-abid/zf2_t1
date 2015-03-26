@@ -1,7 +1,7 @@
 <h1>Backend Blogs List</h1>
 
 <div class="btn-group">
-	<a href="<?php echo $this->url('blog',['action'=>'add']) ?>" class="btn btn-primary">Add</a>
+	<a href="<?php echo $this->url('administrator/blog',['action'=>'form']) ?>" class="btn btn-primary">Add</a>
 </div>
 
 <br/>
@@ -19,8 +19,8 @@
 	<?php foreach($blogs as $blog) : ?>
 		<tr>
 			<td><?php echo $blog->id ?></td>
-			<td><a href="<?php echo $this->url('blog',['action'=>'show','id'=>$blog->id]) ?>"><?php echo $blog->title ?></a></td>
-			<td><a href="<?php echo $this->url('blog',['action'=>'edit','id'=>$blog->id]) ?>">Edit</a></td>
+			<td><a href="<?php echo $this->url('administrator/blog',['action'=>'show','id'=>$blog->id]) ?>"><?php echo $blog->title ?></a></td>
+			<td><a href="<?php echo $this->url('administrator/blog',['action'=>'form','id'=>$blog->id]) ?>">Edit</a></td>
 		</tr>
 	<?php endforeach; ?>	
 	</tbody>

@@ -91,41 +91,41 @@ class Blog implements InputFilterAwareInterface {
         {
             $inputFilter = new InputFilter();
  
-            $inputFilter->add(array(
+            $inputFilter->add([
                 'name'     => 'id',
                 'required' => true,
-                'filters'  => array(
-                    array('name' => 'Int'),
-                ),
-            ));
+                'filters'  => [
+                    ['name' => 'Int'],
+                ],
+            ]);
  
-            $inputFilter->add(array(
+            $inputFilter->add([
                 'name'     => 'title',
                 'required' => true,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
+                'filters'  => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
+                    [
                         'name'    => 'StringLength',
-                        'options' => array(
+                        'options' => [
                             'encoding' => 'UTF-8',
                             'min'      => 1,
                             'max'      => 100,
-                        ),
-                    ),
-                ),
-            ));
+                        ],
+                    ],
+                ],
+            ]);
  
-            $inputFilter->add(array(
+            $inputFilter->add([
                 'name'     => 'body',
                 'required' => true,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-            ));
+                'filters'  => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+            ]);
  
             $this->inputFilter = $inputFilter;
         }
