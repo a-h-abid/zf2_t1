@@ -178,7 +178,7 @@ abstract class MasterController extends AbstractActionController {
         $sm = $e->getApplication()->getServiceManager();
         $router = $sm->get('router');
         $request = $sm->get('request');
-        $route = $router->match($request)->getMatchedRouteName();
+        $matchedRoute = $router->match($request);
         $params = $matchedRoute->getParams();
 
         // Split full controller path
@@ -190,7 +190,7 @@ abstract class MasterController extends AbstractActionController {
         $this->requestNames['layer'] = $this->getLayerName();
         $this->requestNames['controller'] = array_pop($module_array);
         $this->requestNames['action'] = $params['action'];
-        $this->requestNames['route'] = $route;
+        $this->requestNames['route'] = $matchedRoute->getMatchedRouteName();
     }
 
 }
