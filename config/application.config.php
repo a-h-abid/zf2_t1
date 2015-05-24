@@ -8,6 +8,7 @@ return array(
         // 'ZendDeveloperTools',
         // 'Jhu\ZdtLoggerModule',
         // 'BjyProfiler',
+        // 'SanSessionToolbar',
         'ZfSnapPhpDebugBar',
         
         'Application',
