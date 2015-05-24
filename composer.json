@@ -4,7 +4,10 @@
 		"doctrine/doctrine-orm-module": "0.*"
 	},
 	"require-dev" : {
-		"zendframework/zend-developer-tools" : "dev-master"
+		"zendframework/zend-developer-tools" : "dev-master",
+		"snapshotpl/zf-snap-php-debug-bar": "dev-master",
+		"bjyoungblood/bjy-profiler" : "dev-master",
+		"jhuet/zdt-logger-module": "dev-master"
 	},
 	"autoload": {
 		"psr-0": {

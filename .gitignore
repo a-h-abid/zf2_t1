@@ -10,3 +10,4 @@ composer.lock
 vendor
 node_modules
 bower_components
+public/DebugBar

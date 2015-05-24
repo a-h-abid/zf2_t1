@@ -1,10 +1,14 @@
 <?php
+
 return array(
     // This should be an array of module namespaces used in the application.
     'modules' => array(
         'DoctrineModule',
         'DoctrineORMModule',
-        'ZendDeveloperTools',
+        // 'ZendDeveloperTools',
+        // 'Jhu\ZdtLoggerModule',
+        // 'BjyProfiler',
+        'ZfSnapPhpDebugBar',
         
         'Application',
         'Administrator',

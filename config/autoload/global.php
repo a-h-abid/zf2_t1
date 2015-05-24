@@ -33,4 +33,18 @@ return [
         'entitymanager' => 'ABD\Factory\Service\EntityManagerFactory',
     ],
 
+    'php-debug-bar' => [
+
+        // Enables/disables PHP Debug Bar
+        'enabled' => false,
+
+        // ServiceManager keys to inject collectors
+        // http://phpdebugbar.com/docs/data-collectors.html
+        'collectors' => [],
+
+        // ServiceManager key to inject storage
+        // http://phpdebugbar.com/docs/storage.html
+        'storage' => null,
+    ],
+    
 ];
